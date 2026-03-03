@@ -13,8 +13,8 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "海龟汤推理游戏",
-  description: "基于 TizzyZone 设计系统的海龟汤推理游戏",
+  title: "基金估值助手",
+  description: "实时基金持仓估值，FUND YOUR FORTUNE",
 };
 
 export default function RootLayout({
