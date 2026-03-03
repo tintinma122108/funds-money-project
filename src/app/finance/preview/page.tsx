@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-// @ts-ignore - TypeScript may not recognize the component correctly
-import iPhoneViewComponent from '../../../components/iPhoneView';
+import IPhoneFrame from '@/components/iPhoneView';
 import { Toaster } from 'sonner';
 import { BreathingOrb } from '../components/BreathingOrb';
 import { MarketPulse } from '../components/MarketPulse';
@@ -38,9 +37,9 @@ const FinancePreviewPage = () => {
   );
 
   return (
-    <iPhoneViewComponent>
+    <IPhoneFrame>
       <Content />
-    </iPhoneViewComponent>
+    </IPhoneFrame>
   );
 };
 

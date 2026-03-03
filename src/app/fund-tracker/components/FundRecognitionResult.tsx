@@ -146,6 +146,7 @@ export const FundRecognitionResult: React.FC<FundRecognitionResultProps> = ({
                         <div>持仓成本: ¥{fund.purchasePrice.toFixed(4)} / 份</div>
                       )}
                     </div>
+                  </div>
                   <button
                     onClick={() => handleEdit(index)}
                     className="text-zinc-400 hover:text-white transition-colors p-1"

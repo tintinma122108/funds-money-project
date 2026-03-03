@@ -226,15 +226,14 @@ export default function StyleguidePage() {
 function ColorSwatch({ name, color }: { name: string; color: string }) {
   const isLight = color.includes('fff') || color.includes('ffffff') || color.includes('f5f6f6') || color.includes('e5e6e8');
   const textColor = isLight ? '#000' : '#fff';
-  
   return (
     <div className="text-center">
       <div
         className="w-full h-24 rounded-lg mb-2 border border-gray-200"
         style={{ backgroundColor: color }}
       />
-      <div className="text-xs">
-        <div className="font-medium text-gray-700 mb-1">{name}</div>
+      <div className="text-xs" style={{ color: textColor }}>
+        <div className="font-medium mb-1">{name}</div>
         <code className="text-gray-500 text-[10px]">{color}</code>
       </div>
     </div>

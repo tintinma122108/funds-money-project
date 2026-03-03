@@ -15,11 +15,11 @@ export const ManualFundInput: React.FC<ManualFundInputProps> = ({
   onCancel,
 }) => {
   const [funds, setFunds] = useState<RecognizedFund[]>([
-    { fundCode: '', fundName: '', holdingAmount: 0, purchasePrice: undefined },
+    { fundCode: '', fundName: '', shares: 0, holdingAmount: 0, purchasePrice: 0 },
   ]);
 
   const addFund = () => {
-    setFunds([...funds, { fundCode: '', fundName: '', holdingAmount: 0, purchasePrice: undefined }]);
+    setFunds([...funds, { fundCode: '', fundName: '', shares: 0, holdingAmount: 0, purchasePrice: 0 }]);
   };
 
   const removeFund = (index: number) => {
@@ -133,7 +133,7 @@ export const ManualFundInput: React.FC<ManualFundInputProps> = ({
                   step="0.0001"
                   value={fund.purchasePrice || ''}
                   onChange={(e) => {
-                    const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                    const value = e.target.value ? parseFloat(e.target.value) : 0;
                     updateFund(index, 'purchasePrice', value);
                   }}
                   className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:border-emerald-500 focus:outline-none"
