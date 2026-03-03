@@ -1,26 +1,204 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Slogan 字体（基金估值助手） */
+  --font-slogan: "Academy Engraved LET", serif;
+  /* TizzyZone 色彩系统 */
+  --color-fuschia-100: #EF5DA8;
+  --color-fuschia-80: #F178B6;
+  --color-fuschia-60: #FCDDEC;
+  --color-iris-100: #5D5FEF;
+  --color-iris-80: #7879F1;
+  --color-iris-60: #A5A6F6;
+  
+  /* 功能色彩 */
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #A78BFA;
+  
+  /* 中性色彩 - 深色主题 */
+  --color-bg-primary: #0B1221;
+  --color-bg-secondary: #0F172A;
+  --color-text-primary: #E5E7EB;
+  --color-text-secondary: #94A3B8;
+  
+  /* 字体系统 */
+  --font-family: var(--font-work-sans), sans-serif;
+  --font-size-h1: 34px;
+  --font-size-h2: 20px;
+  --font-size-body: 13px;
+  
+  /* 设计规范 */
+  --border-radius: 12px;
+  --border-radius-small: 8px;
+  --transition: 200ms ease-in-out;
+  
+  /* 阴影 */
+  --shadow-low: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-medium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* 颜色映射到 Tailwind */
+  --color-background: var(--color-bg-primary);
+  --color-foreground: var(--color-text-primary);
+  --color-muted: var(--color-text-secondary);
+  --color-card: var(--color-bg-secondary);
+  
+  /* 主色调 */
+  --color-primary: var(--color-fuschia-100);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-iris-100);
+  --color-secondary-foreground: #ffffff;
+  
+  /* 功能色彩 */
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
+  
+  /* 字体 */
+  --font-sans: var(--font-family);
+  
+  /* 圆角 */
+  --radius: var(--border-radius);
+  --radius-sm: var(--border-radius-small);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 全局样式重置 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 字体层级 */
+.text-h1 {
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.text-h2 {
+  font-size: var(--font-size-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.text-body {
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* 通用过渡 */
+.transition-default {
+  transition: all var(--transition);
+}
+
+/* 毛玻璃效果 */
+.backdrop-blur-glass {
+  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-secondary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-primary);
+}
+
+/* 焦点样式 */
+.focus-ring {
+  outline: 2px solid var(--color-fuschia-100);
+  outline-offset: 2px;
+}
+
+/* 响应式容器 */
+.container-responsive {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 720px;
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 1200px;
+  }
+}
+
+/* Custom scrollbar for AppViewport */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Academy Engraved LET - Slogan 字体（基金估值助手） */
+@font-face {
+  font-family: "Academy Engraved LET";
+  src: url("https://db.onlinewebfonts.com/t/3c471385717f118ae2efdeabbdc50824.eot");
+  src: url("https://db.onlinewebfonts.com/t/3c471385717f118ae2efdeabbdc50824.eot?#iefix") format("embedded-opentype"),
+       url("https://db.onlinewebfonts.com/t/3c471385717f118ae2efdeabbdc50824.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/3c471385717f118ae2efdeabbdc50824.woff") format("woff"),
+       url("https://db.onlinewebfonts.com/t/3c471385717f118ae2efdeabbdc50824.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }

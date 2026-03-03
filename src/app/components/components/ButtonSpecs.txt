@@ -1,0 +1,500 @@
+================================================================================
+BUTTON COMPONENT SPECIFICATIONS
+================================================================================
+Generated from Figma Design System
+Figma Node ID: 21:17858
+Source: https://www.figma.com/design/Oi18J2FpwvtskMMH0geuFo/app-ui-token
+
+================================================================================
+1. COMPONENT OVERVIEW
+================================================================================
+
+Component Name: Button
+Component Type: Interactive UI Element
+Framework: React with TypeScript
+Design System: Extracted from Figma
+
+Purpose:
+The Button component is a versatile, accessible button element designed for user
+interactions. It supports multiple visual variants, sizes, and states to accommodate
+various use cases throughout the application.
+
+================================================================================
+2. DESIGN SPECIFICATIONS FROM FIGMA
+================================================================================
+
+2.1 Color Variants:
+-------------------
+- Brand (Primary): #00afbc (Cyan)
+- Sell: #00afbc (Cyan) / #00cad5 (Hover)
+- Buy: #ea365a (Red) / #f5627f (Hover)
+- Black: #000000
+- 辅助 (Auxiliary): Neutral gray tones
+- 幽灵1 (Ghost 1): Transparent with border
+- 幽灵2 (Ghost 2): Transparent variant
+
+2.2 Size Variants:
+------------------
+- 56px: Extra Large (Height: 56px)
+- 48px: Large (Height: 48px)
+- 40px: Medium (Height: 40px) - DEFAULT
+- 32px: Small (Height: 32px)
+- 24px: Extra Small (Height: 24px)
+
+2.3 States:
+-----------
+- 默认 (Default): Normal state
+- 悬停 (Hover): Mouse over state
+- 禁用 (Disabled): Non-interactive state
+
+2.4 Border Radius:
+------------------
+- 圆角=on: Rounded corners (typically 12px based on design system)
+- 圆角=off: Square corners (0px)
+
+================================================================================
+3. IMPLEMENTATION SPECIFICATIONS
+================================================================================
+
+3.1 Props Interface:
+--------------------
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info';
+  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
+}
+
+3.2 Default Values:
+-------------------
+- variant: 'primary'
+- size: 'md'
+- disabled: false
+- children: Required (no default)
+
+3.3 Type Definitions:
+---------------------
+- variant: Union type of 6 predefined variants
+- size: Union type of 3 predefined sizes
+- disabled: boolean (inherited from HTMLButtonElement)
+- children: React.ReactNode (required)
+
+================================================================================
+4. PROP DETAILS
+================================================================================
+
+4.1 variant Prop:
+-----------------
+Type: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info'
+Default: 'primary'
+Required: No
+
+Description:
+Determines the visual style and color scheme of the button.
+
+Values:
+- 'primary': Brand color (Fuschia #EF5DA8) - Main actions
+- 'secondary': Secondary color (Iris #5D5FEF) - Alternative actions
+- 'success': Green (#22C55E) - Positive actions
+- 'error': Red (#EF4444) - Destructive actions
+- 'warning': Orange (#F59E0B) - Cautionary actions
+- 'info': Purple (#A78BFA) - Informational actions
+
+Validation:
+- Must be one of the predefined variants
+- Invalid values will fall back to 'primary'
+- TypeScript enforces type safety at compile time
+
+4.2 size Prop:
+--------------
+Type: 'sm' | 'md' | 'lg'
+Default: 'md'
+Required: No
+
+Description:
+Controls the physical dimensions and text size of the button.
+
+Values:
+- 'sm': 
+  * Height: 32px (h-8)
+  * Padding: 12px horizontal (px-3)
+  * Font Size: 14px (text-sm)
+  
+- 'md': 
+  * Height: 40px (h-10)
+  * Padding: 16px horizontal (px-4)
+  * Font Size: 13px (text-body)
+  
+- 'lg': 
+  * Height: 48px (h-12)
+  * Padding: 24px horizontal (px-6)
+  * Font Size: 16px (text-base)
+
+Validation:
+- Must be one of 'sm', 'md', or 'lg'
+- Invalid values will fall back to 'md'
+- TypeScript enforces type safety
+
+4.3 disabled Prop:
+------------------
+Type: boolean
+Default: false
+Required: No
+
+Description:
+When true, the button becomes non-interactive and visually appears disabled.
+
+Behavior:
+- Applies opacity: 50% (disabled:opacity-50)
+- Disables pointer events (disabled:pointer-events-none)
+- Prevents click events
+- Maintains accessibility attributes
+
+Validation:
+- Must be a boolean value
+- Inherited from HTMLButtonElement
+- No additional validation needed
+
+4.4 children Prop:
+------------------
+Type: React.ReactNode
+Default: None
+Required: Yes
+
+Description:
+The content displayed inside the button. Can be text, icons, or any React element.
+
+Acceptable Values:
+- String: "Click me"
+- React Element: <Icon />
+- Fragment: <>Text <Icon /></>
+- Number: 42
+- Array of elements
+
+Validation:
+- Must be provided (required prop)
+- Cannot be null or undefined
+- TypeScript will error if omitted
+
+4.5 className Prop:
+-------------------
+Type: string
+Default: Merged with base classes
+Required: No
+
+Description:
+Allows custom CSS classes to be applied. Uses clsx and tailwind-merge for
+intelligent class merging.
+
+Behavior:
+- Merges with default classes
+- Resolves Tailwind conflicts automatically
+- Preserves important styles (disabled, focus states)
+
+4.6 Standard HTML Attributes:
+------------------------------
+All standard HTML button attributes are supported:
+- onClick: Event handler for click events
+- onFocus: Event handler for focus events
+- onBlur: Event handler for blur events
+- type: 'button' | 'submit' | 'reset'
+- aria-*: Accessibility attributes
+- data-*: Data attributes
+- id, name, form, etc.
+
+================================================================================
+5. VALIDATION RULES & CONSTRAINTS
+================================================================================
+
+5.1 Required Props:
+-------------------
+- children: MUST be provided, cannot be null/undefined
+
+5.2 Type Constraints:
+----------------------
+- variant: Limited to 6 predefined values
+- size: Limited to 3 predefined values
+- disabled: Must be boolean
+
+5.3 Runtime Validation:
+-----------------------
+- Invalid variant values → fallback to 'primary'
+- Invalid size values → fallback to 'md'
+- TypeScript provides compile-time validation
+
+5.4 Accessibility Constraints:
+------------------------------
+- Must be keyboard accessible (Tab navigation)
+- Must have focus indicators
+- Must support screen readers
+- Disabled state must be properly announced
+
+5.5 Visual Constraints:
+-----------------------
+- Minimum touch target: 44x44px (recommended)
+- Maximum width: No limit (responsive)
+- Text must be readable (contrast ratio >= 4.5:1)
+
+================================================================================
+6. USAGE EXAMPLES
+================================================================================
+
+6.1 Basic Usage:
+----------------
+import { Button } from '@/components/ui/Button';
+
+<Button>Click me</Button>
+
+6.2 With Variant:
+-----------------
+<Button variant="primary">Primary Action</Button>
+<Button variant="secondary">Secondary Action</Button>
+<Button variant="error">Delete</Button>
+
+6.3 With Size:
+--------------
+<Button size="sm">Small Button</Button>
+<Button size="md">Medium Button</Button>
+<Button size="lg">Large Button</Button>
+
+6.4 Disabled State:
+-------------------
+<Button disabled>Processing...</Button>
+
+6.5 With Event Handler:
+------------------------
+<Button onClick={() => console.log('Clicked')}>
+  Click me
+</Button>
+
+6.6 With Custom ClassName:
+--------------------------
+<Button className="w-full">Full Width</Button>
+
+6.7 With Icons:
+---------------
+<Button>
+  <Icon /> Save
+</Button>
+
+6.8 Form Submission:
+--------------------
+<form>
+  <Button type="submit">Submit Form</Button>
+</form>
+
+================================================================================
+7. STYLING SPECIFICATIONS
+================================================================================
+
+7.1 Base Styles:
+----------------
+- Display: inline-flex
+- Alignment: items-center, justify-center
+- Border Radius: 12px (rounded-default)
+- Font Weight: medium (500)
+- Transition: 200ms ease-in-out (transition-default)
+- Focus: ring-2, ring-offset-2
+
+7.2 Variant Styles:
+-------------------
+Primary:
+- Background: #EF5DA8 (fuschia-100)
+- Text: white
+- Hover: #F178B6 (fuschia-80)
+- Focus Ring: fuschia-100
+
+Secondary:
+- Background: #5D5FEF (iris-100)
+- Text: white
+- Hover: #7879F1 (iris-80)
+- Focus Ring: iris-100
+
+Success:
+- Background: #22C55E
+- Text: white
+- Hover: #22C55E with 90% opacity
+- Focus Ring: success color
+
+Error:
+- Background: #EF4444
+- Text: white
+- Hover: #EF4444 with 90% opacity
+- Focus Ring: error color
+
+Warning:
+- Background: #F59E0B
+- Text: white
+- Hover: #F59E0B with 90% opacity
+- Focus Ring: warning color
+
+Info:
+- Background: #A78BFA
+- Text: white
+- Hover: #A78BFA with 90% opacity
+- Focus Ring: info color
+
+7.3 Size Styles:
+----------------
+Small (sm):
+- Height: 32px
+- Padding: 12px horizontal
+- Font: 14px
+
+Medium (md):
+- Height: 40px
+- Padding: 16px horizontal
+- Font: 13px
+
+Large (lg):
+- Height: 48px
+- Padding: 24px horizontal
+- Font: 16px
+
+7.4 State Styles:
+-----------------
+Default:
+- Full opacity
+- Interactive
+- Normal cursor
+
+Hover:
+- Slightly lighter background (variant-specific)
+- Cursor: pointer
+
+Focus:
+- Ring: 2px
+- Ring Offset: 2px
+- Ring Color: Matches variant
+
+Disabled:
+- Opacity: 50%
+- Pointer Events: none
+- Cursor: not-allowed
+
+================================================================================
+8. ACCESSIBILITY SPECIFICATIONS
+================================================================================
+
+8.1 Keyboard Navigation:
+------------------------
+- Tab: Focus button
+- Enter/Space: Activate button
+- Escape: (if in modal context)
+
+8.2 Screen Reader Support:
+--------------------------
+- Semantic HTML: <button> element
+- ARIA attributes: Inherited from HTMLButtonElement
+- Disabled state: Properly announced
+- Focus indicators: Visible and clear
+
+8.3 Color Contrast:
+-------------------
+- Text on background: WCAG AA compliant (4.5:1 minimum)
+- Focus indicators: High contrast
+- Disabled state: Clearly distinguishable
+
+8.4 Touch Targets:
+-------------------
+- Minimum: 44x44px (recommended)
+- All sizes meet or exceed minimum
+
+================================================================================
+9. COMPONENT-SPECIFIC FEATURES
+================================================================================
+
+9.1 Forward Ref Support:
+-------------------------
+The component uses React.forwardRef, allowing parent components to access the
+underlying DOM element:
+
+const buttonRef = useRef<HTMLButtonElement>(null);
+<Button ref={buttonRef}>Click</Button>
+
+9.2 Class Name Merging:
+------------------------
+Uses clsx and tailwind-merge for intelligent class merging:
+- Resolves Tailwind conflicts
+- Preserves important styles
+- Allows customization
+
+9.3 TypeScript Support:
+-----------------------
+- Fully typed interface
+- Extends ButtonHTMLAttributes
+- Compile-time type checking
+- IntelliSense support
+
+9.4 Event Handling:
+-------------------
+Supports all standard button events:
+- onClick
+- onFocus
+- onBlur
+- onMouseEnter/Leave
+- etc.
+
+================================================================================
+10. TESTING SPECIFICATIONS
+================================================================================
+
+10.1 Unit Tests:
+----------------
+- Render with default props
+- Render with all variants
+- Render with all sizes
+- Disabled state behavior
+- Click event handling
+- Ref forwarding
+
+10.2 Integration Tests:
+-----------------------
+- Form submission
+- Keyboard navigation
+- Focus management
+- Accessibility attributes
+
+10.3 Visual Regression:
+-----------------------
+- All variant/size combinations
+- All states (default, hover, focus, disabled)
+- Responsive behavior
+
+================================================================================
+11. MIGRATION & COMPATIBILITY
+================================================================================
+
+11.1 Browser Support:
+---------------------
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- IE11: Not supported
+- Mobile browsers: Full support
+
+11.2 React Version:
+-------------------
+- Requires React 16.8+ (hooks support)
+- Compatible with React 18+
+- TypeScript 4.5+
+
+11.3 Dependencies:
+------------------
+- React
+- clsx
+- tailwind-merge
+- Tailwind CSS
+
+================================================================================
+12. CHANGELOG & VERSION HISTORY
+================================================================================
+
+Version 1.0.0 (Current):
+- Initial implementation
+- Extracted from Figma design system
+- Supports 6 variants, 3 sizes
+- Full TypeScript support
+- Accessibility compliant
+
+================================================================================
+END OF SPECIFICATIONS
+================================================================================
+
