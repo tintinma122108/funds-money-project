@@ -3,6 +3,9 @@ import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { GameProvider } from "@/contexts/GameContext";
 
+// 避免构建时 SSG 执行依赖浏览器 location 的代码（如部分依赖库）
+export const dynamic = "force-dynamic";
+
 const workSans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-work-sans",
