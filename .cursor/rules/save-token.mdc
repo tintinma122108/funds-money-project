@@ -1,0 +1,23 @@
+---
+alwaysApply: true
+---
+
+# 项目核心技术栈 (Context Precision)
+- Framework: Next.js 14+ (App Router)
+- Styling: Tailwind CSS
+- Animation: Framer Motion (Strict adherence)
+- Language: TypeScript (Strict mode)
+
+# 动效开发规范 (Logic Consistency)
+- 所有的交互组件必须优先考虑自适应布局（Flex/Stack），避免使用硬编码的 Absolute 定位。
+- Framer Motion 的 variants 应当提取为独立常量，保持代码整洁并便于 AI 复用。
+- 动画参数（Stiffness, Damping）需参考自然物理逻辑，保持全站手感一致。
+
+# Token 优化与上下文管理 (Efficiency)
+- **屏蔽冗余信息**：在执行任务时，忽略 .next/, node_modules/, public/assets/ 等二进制或编译文件夹。
+- **精确索引**：优先读取当前选定文件及其直接 import 的关联组件，除非显式使用 @codebase。
+- **禁止幻觉**：如果无法通过现有代码库确定某个 API 的版本，请直接询问我，不要盲目推测。
+
+# 协作偏好 (Workflow)
+- 每次修改代码后，如果涉及 UI 变动，请在 Composer 中简要说明改动了哪些动效参数。
+- 在重构多个文件前，先给出修改计划（Plan），待我确认后再执行。
