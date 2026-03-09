@@ -18,13 +18,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // 根路径与 /start 统一跳转到基金估值助手（服务端重定向，不依赖前端）
-  async redirects() {
-    return [
-      { source: '/', destination: '/fund-tracker', permanent: false },
-      { source: '/start', destination: '/fund-tracker', permanent: false },
-    ];
-  },
+  // 根路径与 /start 由前端 page 内 client redirect 到 /fund-tracker，避免服务端重定向导致 /fund-tracker 首请求 404/500
+  // async redirects() { return [ { source: '/', destination: '/fund-tracker', permanent: false }, { source: '/start', destination: '/fund-tracker', permanent: false } ]; },
   // 允许外部API调用（如果需要）
   async headers() {
     return [

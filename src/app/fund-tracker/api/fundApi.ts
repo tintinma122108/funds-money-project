@@ -153,44 +153,45 @@ async function fetchFromEastMoney(fundCode: string): Promise<FundInfo | null> {
 }
 
 /**
- * 获取基金信息（自动尝试多个数据源）
+ * 获取基金信息（自动尝试多个数据源，不向外抛错）
  */
 export async function getFundInfo(fundCode: string): Promise<FundInfo | null> {
-  // 尝试顺序：天天基金 -> 东方财富 -> 新浪财经
-  let result = await fetchFromTianTian(fundCode);
-  if (result) return result;
+  try {
+    let result = await fetchFromTianTian(fundCode);
+    if (result) return result;
 
-  result = await fetchFromEastMoney(fundCode);
-  if (result) return result;
+    result = await fetchFromEastMoney(fundCode);
+    if (result) return result;
 
-  result = await fetchFromSina(fundCode);
-  return result;
+    result = await fetchFromSina(fundCode);
+    return result;
+  } catch (e) {
+    console.error('getFundInfo error:', e);
+    return null;
+  }
 }
 
 /**
- * 批量获取基金信息
+ * 批量获取基金信息（不向外抛错）
  */
 export async function getMultipleFundInfo(fundCodes: string[]): Promise<Map<string, FundInfo>> {
   const results = new Map<string, FundInfo>();
-  
-  // 并发请求，但限制并发数
-  const batchSize = 5;
-  for (let i = 0; i < fundCodes.length; i += batchSize) {
-    const batch = fundCodes.slice(i, i + batchSize);
-    const promises = batch.map(async (code) => {
-      const info = await getFundInfo(code);
-      if (info) {
-        results.set(code, info);
+  try {
+    const batchSize = 5;
+    for (let i = 0; i < fundCodes.length; i += batchSize) {
+      const batch = fundCodes.slice(i, i + batchSize);
+      const promises = batch.map(async (code) => {
+        const info = await getFundInfo(code);
+        if (info) results.set(code, info);
+      });
+      await Promise.all(promises);
+      if (i + batchSize < fundCodes.length) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
-    });
-    await Promise.all(promises);
-    
-    // 避免请求过快，添加延迟
-    if (i + batchSize < fundCodes.length) {
-      await new Promise(resolve => setTimeout(resolve, 200));
     }
+  } catch (e) {
+    console.error('getMultipleFundInfo error:', e);
   }
-  
   return results;
 }
 

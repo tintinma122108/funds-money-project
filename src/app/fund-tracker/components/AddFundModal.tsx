@@ -18,73 +18,47 @@ export const AddFundModal: React.FC<AddFundModalProps> = ({
 }) => {
   const [fundCode, setFundCode] = useState('');
   const [shares, setShares] = useState(''); // 持仓份额
-  const [holdingAmount, setHoldingAmount] = useState(''); // 持仓金额
-  const [purchasePrice, setPurchasePrice] = useState(''); // 持仓成本
+  const [purchasePrice, setPurchasePrice] = useState(''); // 持有均价（元/份）
   const [exitMode, setExitMode] = useState<'default' | 'cancel' | 'confirm'>('default');
   const [crumpledBallLoaded, setCrumpledBallLoaded] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 验证基金代码
+    // 校验：基金代码 6 位数字
     if (!/^\d{6}$/.test(fundCode)) {
       alert('基金代码必须是6位数字');
       return;
     }
 
-    // 验证持仓份额
+    // 校验：持仓份额为正数
     const sharesNum = parseFloat(shares);
     if (isNaN(sharesNum) || sharesNum <= 0) {
       alert('请输入有效的持仓份额（必须大于0）');
       return;
     }
 
-    // 验证持仓金额
-    const amount = parseFloat(holdingAmount);
-    if (isNaN(amount) || amount <= 0) {
-      alert('请输入有效的持仓金额（必须大于0）');
-      return;
-    }
-
-    // 验证持仓成本
+    // 校验：持有均价为正数
     const cost = parseFloat(purchasePrice);
     if (isNaN(cost) || cost <= 0) {
-      alert('请输入有效的持仓成本（必须大于0）');
+      alert('请输入有效的持有均价（必须大于0）');
       return;
     }
 
-    // 验证数据合理性：
-    // 1. 持仓金额（当前市值）应该 >= 持仓份额 × 持仓成本（持有成本）
-    //    因为持仓金额包含收益，所以应该大于等于成本
-    // 2. 但也不应该过大（比如超过成本的10倍），避免输入错误
-    const holdingCost = sharesNum * cost;
-    const maxReasonableValue = holdingCost * 10; // 允许最多10倍，避免输入错误
-    
-    if (amount < holdingCost) {
-      alert(`持仓金额（当前市值 ${amount.toFixed(2)}）不应小于持有成本（${holdingCost.toFixed(2)} = ${sharesNum} × ${cost.toFixed(4)}）`);
-      return;
-    }
-    
-    if (amount > maxReasonableValue) {
-      alert(`持仓金额（${amount.toFixed(2)}）似乎过大，请确认是否输入正确。持有成本为 ${holdingCost.toFixed(2)}`);
-      return;
-    }
-
-    // 提交数据
+    // 当前市值由后端根据 API 实时净值自动计算，此处传 0 即可
     setExitMode('confirm');
     requestAnimationFrame(() => {
       onConfirm({
         fundCode: fundCode.trim(),
         fundName: '', // 名称会自动从API获取
         shares: sharesNum,
-        holdingAmount: amount,
+        holdingAmount: 0,
         purchasePrice: cost,
       });
       onClose();
       setTimeout(() => {
         setFundCode('');
         setShares('');
-        setHoldingAmount('');
         setPurchasePrice('');
         setExitMode('default');
       }, 500);
@@ -98,7 +72,6 @@ export const AddFundModal: React.FC<AddFundModalProps> = ({
       setTimeout(() => {
         setFundCode('');
         setShares('');
-        setHoldingAmount('');
         setPurchasePrice('');
         setExitMode('default');
       }, 800);
@@ -321,36 +294,6 @@ export const AddFundModal: React.FC<AddFundModalProps> = ({
                     <div style={{ position: 'relative', textAlign: 'center' }}>
                       <input
                         type="number"
-                        value={holdingAmount}
-                        onChange={(e) => setHoldingAmount(e.target.value)}
-                        placeholder="10000"
-                        step="0.01"
-                        min="0.01"
-                        required
-                        style={{
-                          width: '100%',
-                          background: 'transparent',
-                          borderBottom: '1px solid #d6d3d1',
-                          borderTop: 'none',
-                          borderLeft: 'none',
-                          borderRight: 'none',
-                          padding: '8px 0',
-                          fontSize: '20px',
-                          fontFamily: 'var(--font-share-tech-mono), "Share Tech Mono", monospace',
-                          color: '#1c1917',
-                          textAlign: 'center',
-                          outline: 'none',
-                          transition: 'border-color 0.2s',
-                        }}
-                        onFocus={(e) => e.currentTarget.style.borderBottomColor = '#1c1917'}
-                        onBlur={(e) => e.currentTarget.style.borderBottomColor = '#d6d3d1'}
-                      />
-                      <label style={{ display: 'block', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.2em', color: '#a8a29e', textTransform: 'uppercase', fontFamily: 'sans-serif', marginTop: '8px' }}>持仓金额（元，当前市值）</label>
-                    </div>
-
-                    <div style={{ position: 'relative', textAlign: 'center' }}>
-                      <input
-                        type="number"
                         value={purchasePrice}
                         onChange={(e) => setPurchasePrice(e.target.value)}
                         placeholder="2.50"
@@ -375,46 +318,97 @@ export const AddFundModal: React.FC<AddFundModalProps> = ({
                         onFocus={(e) => e.currentTarget.style.borderBottomColor = '#1c1917'}
                         onBlur={(e) => e.currentTarget.style.borderBottomColor = '#d6d3d1'}
                       />
-                      <label style={{ display: 'block', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.2em', color: '#a8a29e', textTransform: 'uppercase', fontFamily: 'sans-serif', marginTop: '8px' }}>持仓成本（元/份）</label>
+                      <label style={{ display: 'block', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.2em', color: '#a8a29e', textTransform: 'uppercase', fontFamily: 'sans-serif', marginTop: '8px' }}>持有均价（元/份）</label>
                     </div>
 
                     <div style={{ paddingTop: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                       <button 
                         type="submit" 
                         style={{
-                          background: '#1c1917',
-                          color: '#f7f5f0',
-                          padding: '12px 40px',
-                          boxShadow: '0 10px 15px rgba(0,0,0,0.1)',
+                          position: 'relative',
+                          width: '100%',
+                          height: '44px',
+                          outline: 'none',
                           border: 'none',
                           cursor: 'pointer',
-                          width: '100%',
-                          fontFamily: '"Playfair Display", serif',
-                          fontStyle: 'italic',
-                          fontWeight: 600,
-                          fontSize: '16px',
-                          transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = '#292524';
-                          e.currentTarget.style.boxShadow = '0 15px 20px rgba(0,0,0,0.15)';
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = '#1c1917';
-                          e.currentTarget.style.boxShadow = '0 10px 15px rgba(0,0,0,0.1)';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }}
-                        onMouseDown={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 5px 10px rgba(0,0,0,0.1)';
-                        }}
-                        onMouseUp={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 15px 20px rgba(0,0,0,0.15)';
+                          background: 'transparent',
+                          padding: 0,
                         }}
                       >
-                        Confirm Entry
+                        <span
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '9999px',
+                            backgroundImage: `
+                              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
+                              linear-gradient(180deg, #ea553a 0%, #d64126 100%)
+                            `,
+                            backgroundBlendMode: 'overlay, normal',
+                            boxShadow: `
+                              inset 0 1px 0 rgba(255,255,255,0.3),
+                              inset 0 -1px 2px rgba(0,0,0,0.2),
+                              0 1px 2px rgba(0,0,0,0.2),
+                              0 0 0 1px rgba(0,0,0,0.1),
+                              0 0 0 4px #e8e6e1,
+                              0 0 0 5px rgba(255,255,255,0.6),
+                              0 1px 3px 4px rgba(0,0,0,0.1),
+                              inset 0 0 8px rgba(0,0,0,0.15)
+                            `,
+                            color: '#fbfaf8',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            letterSpacing: '0.05em',
+                            textShadow: '0 1px 0 rgba(0,0,0,0.2)',
+                            fontFamily: 'system-ui, sans-serif',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'transform 0.1s',
+                          }}
+                          onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'scale(0.98)';
+                            e.currentTarget.style.boxShadow = `
+                              inset 0 2px 4px rgba(0,0,0,0.3),
+                              inset 0 -1px 2px rgba(0,0,0,0.2),
+                              0 1px 2px rgba(0,0,0,0.2),
+                              0 0 0 1px rgba(0,0,0,0.1),
+                              0 0 0 4px #e8e6e1,
+                              0 0 0 5px rgba(255,255,255,0.6),
+                              0 1px 3px 4px rgba(0,0,0,0.1),
+                              inset 0 0 8px rgba(0,0,0,0.15)
+                            `;
+                          }}
+                          onMouseUp={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.boxShadow = `
+                              inset 0 1px 0 rgba(255,255,255,0.3),
+                              inset 0 -1px 2px rgba(0,0,0,0.2),
+                              0 1px 2px rgba(0,0,0,0.2),
+                              0 0 0 1px rgba(0,0,0,0.1),
+                              0 0 0 4px #e8e6e1,
+                              0 0 0 5px rgba(255,255,255,0.6),
+                              0 1px 3px 4px rgba(0,0,0,0.1),
+                              inset 0 0 8px rgba(0,0,0,0.15)
+                            `;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.boxShadow = `
+                              inset 0 1px 0 rgba(255,255,255,0.3),
+                              inset 0 -1px 2px rgba(0,0,0,0.2),
+                              0 1px 2px rgba(0,0,0,0.2),
+                              0 0 0 1px rgba(0,0,0,0.1),
+                              0 0 0 4px #e8e6e1,
+                              0 0 0 5px rgba(255,255,255,0.6),
+                              0 1px 3px 4px rgba(0,0,0,0.1),
+                              inset 0 0 8px rgba(0,0,0,0.15)
+                            `;
+                          }}
+                        >
+                          确认添加
+                        </span>
                       </button>
                       <button 
                         type="button" 
@@ -435,7 +429,7 @@ export const AddFundModal: React.FC<AddFundModalProps> = ({
                         onMouseEnter={(e) => e.currentTarget.style.color = '#78716c'}
                         onMouseLeave={(e) => e.currentTarget.style.color = '#d6d3d1'}
                       >
-                        Cancel
+                        丢弃
                       </button>
                     </div>
                   </form>

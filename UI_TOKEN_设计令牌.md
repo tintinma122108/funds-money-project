@@ -10,10 +10,13 @@
 
 #### 背景色 (Background)
 ```css
-/* 主背景渐变 */
+/* 主背景渐变（与 fund-tracker 整页、body 一致） */
 --bg-primary-start: #faf9f7;
 --bg-primary-mid: #f5f3f0;
 --bg-primary-end: #f0ebe5;
+
+/* 整页/body 背景（CSS 变量，与主背景渐变同值） */
+--page-background: linear-gradient(to bottom, #faf9f7 0%, #f5f3f0 50%, #f0ebe5 100%);
 
 /* 卡片背景 */
 --bg-card: #ffffff;
@@ -58,10 +61,16 @@
 
 #### 装饰颜色 (Decorative Colors)
 ```css
-/* 按钮主色 */
+/* 按钮主色（Braun 胶囊主操作按钮） */
 --button-primary: #ea553a;
 --button-primary-hover: #d64126;
 --button-primary-text: #fbfaf8;
+/* 主操作按钮：胶囊形、渐变 linear-gradient(180deg, #ea553a 0%, #d64126 100%)、叠加纸张噪点纹理（见 --opacity-paper-noise）、多层阴影（见 --shadow-button）。使用场景：主列表「添加」、添加基金弹窗「确认添加」。 */
+
+/* 次要操作/取消（文本链接风格） */
+--button-secondary-text: #d6d3d1;
+--button-secondary-text-hover: #78716c;
+/* 使用场景：添加基金弹窗「丢弃」等。无背景、小号大写风格。 */
 
 /* 纸张纹理颜色 */
 --paper-texture: #d4d1cc;
@@ -102,9 +111,9 @@
   - 总资产数字
   - 估值涨跌幅
   - 累计收益、当日盈亏
-  - 持有金额、持有份额、持仓成本、持有收益、持有收益率
+  - 持有金额、持有份额、持有均价、持仓成本、持有收益、持有收益率
   - 基金代码
-  - 输入框数字
+  - 输入框数字（添加基金仅三项：基金代码、持仓份额、持有均价）
 - **来源**：Google Fonts
 - **特点**：等宽字体，具有强烈的科技感和仪表盘质感，模拟液晶数值风格
 
@@ -289,6 +298,29 @@ font-weight: 500;
 --header-flip-easing: cubic-bezier(0.23, 1, 0.32, 1);
 ```
 
+#### 下拉刷新 (Pull-to-Refresh)
+```css
+/* 视窗与安全区 */
+--pull-viewport-height: 100dvh;           /* 根容器高度，填满动态视窗 */
+--pull-top-cover: 20px;                   /* 顶部延伸覆盖 safe-area/黑条 */
+--pull-top-cover-css: max(20px, env(safe-area-inset-top, 0px));
+
+/* 位移与阈值（比例） */
+--pull-ratio: 0.2;                        /* 被推下的 main/顶部区域高度占视口比例 */
+--pull-threshold-ratio: 0.1;              /* 触发刷新的下拉阈值占视口比例 */
+--pull-motion-main-gap-ratio: 0.16;       /* motion 与 main 间距占视口比例 */
+--pull-motion-main-gap-min-px: 64;
+--pull-motion-main-gap-max-px: 144;
+
+/* 行为 */
+--pull-resistance: 0.5;                    /* 下拉阻力系数 */
+--pull-min-loading-duration-ms: 2000;     /* 刷新中至少展示时长（毫秒） */
+
+/* 回弹动画 */
+--pull-spring-stiffness: 400;
+--pull-spring-damping: 40;
+```
+
 ### 4.4 动画性能
 ```css
 /* 硬件加速 */
@@ -315,7 +347,7 @@ backface-visibility: hidden;
   20px 50px 60px rgba(0, 0, 0, 0.45),
   5px 15px 15px rgba(0, 0, 0, 0.2);
 
-/* 按钮阴影 */
+/* 按钮阴影（Braun 胶囊主操作按钮：添加 / 确认添加） */
 --shadow-button: 
   inset 0 1px 0 rgba(255, 255, 255, 0.3),
   inset 0 -1px 2px rgba(0, 0, 0, 0.2),
@@ -343,7 +375,7 @@ backface-visibility: hidden;
 --radius-small: 4px;
 --radius-medium: 8px;
 --radius-large: 12px;
---radius-full: 9999px;  /* 胶囊按钮 */
+--radius-full: 9999px;  /* 胶囊按钮（Braun 主操作：添加、确认添加） */
 ```
 
 ---
@@ -386,7 +418,8 @@ backface-visibility: hidden;
 --z-elevated: 10;
 --z-modal-backdrop: 40;
 --z-modal: 50;
---z-decorative: 50;  /* 装饰元素 */
+--z-decorative: 50;     /* 装饰元素 */
+--z-pull-top-band: 100; /* 下拉刷新顶部 Loading 区域，需高于 FundHeader 等 */
 ```
 
 ---
@@ -422,8 +455,8 @@ const style = {
 
 ---
 
-**文档版本**：v1.0  
-**最后更新**：2024年  
+**文档版本**：v1.1  
+**最后更新**：2025年  
 **维护人员**：设计团队
 
 

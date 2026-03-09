@@ -156,24 +156,25 @@ export async function getCurrentPrice(fundCode: string): Promise<number> {
 export async function calculateFundHolding(
   fundCode: string,
   fundName: string,
-  shares: number, // 使用用户输入的份额
-  holdingAmount: number, // 用户输入的持仓金额 = 当前市值（包含收益）
-  purchasePrice: number // 用户输入的持仓成本（元/份）
+  shares: number, // 用户输入的持仓份额
+  holdingAmount: number, // 可选：用户输入的当前市值；为 0 时完全由 API 净值计算当前市值
+  purchasePrice: number // 用户输入的持有均价（元/份）
 ): Promise<FundHolding> {
-  // 确保所有输入值有效
   const safePurchasePrice = purchasePrice || 1;
-  const safeHoldingAmount = holdingAmount || 0; // 用户输入的持仓金额 = 当前市值
-  const safeShares = shares || (safeHoldingAmount / safePurchasePrice); // 优先使用用户输入的份额
-  
-  // 持有成本 = 持仓成本价 x 持有份额
+  const safeShares = shares || 0;
+  const safeHoldingAmount = holdingAmount || 0;
+
+  // 持有成本 = 持有均价 × 持仓份额（仅依赖用户输入）
   const holdingCost = safePurchasePrice * safeShares;
-  
-  // 获取快照（用于计算今日收益和涨跌幅）
+
   const snapshot = await getFundSnapshot(fundCode);
-  const safeCurrentPrice = snapshot.currentPrice || (safeHoldingAmount / safeShares); // 如果API失败，使用用户输入的市值反推价格
+  // 当前净值：优先 API；无 API 时若用户曾填过市值则反推，否则用持有均价暂代（持有收益暂为 0）
+  const safeCurrentPrice =
+    snapshot.currentPrice ||
+    (safeHoldingAmount > 0 && safeShares > 0 ? safeHoldingAmount / safeShares : safePurchasePrice);
   const safeYesterdayPrice = snapshot.yesterdayPrice || safeCurrentPrice;
-  
-  // 当前市值 = shares × currentPrice（实时计算，用于列表显示）
+
+  // 当前市值 = 份额 × 实时净值（由 API 得到，无 API 时用上述 fallback）
   const currentValue = safeShares * safeCurrentPrice;
   
   // 持有收益 = 当前市值 - 持有成本

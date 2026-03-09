@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { GameProvider } from "@/contexts/GameContext";
+import { FontLoadingLink } from "@/components/FontLoadingLink";
 
 // 避免构建时 SSG 执行依赖浏览器 location 的代码（如部分依赖库）
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={`${workSans.variable} antialiased`}>
+        <FontLoadingLink />
         <GameProvider>
           {children}
         </GameProvider>
